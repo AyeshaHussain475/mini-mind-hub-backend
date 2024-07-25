@@ -1,6 +1,6 @@
-const User = require("../models/user");
+import User from "../models/User.js";
 
-exports.signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const existingUser = await User.findOne({
       email: req.body.email,
@@ -39,7 +39,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.signin = async (req, res) => {
+export const signin = async (req, res) => {
   const existingUser = await User.findOne({ email: req.body.email });
 
   if (!existingUser) {

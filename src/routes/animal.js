@@ -1,10 +1,10 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   postAnimalMedia,
   getAnimalsMedia,
   updateAnimalMedia,
-} = require("../controller/animal");
-const multer = require("multer");
+} from "../controller/animal.js";
+import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -23,4 +23,4 @@ animalRouter.post("/media", upload.single("imageUrl"), postAnimalMedia);
 animalRouter.get("/media", getAnimalsMedia);
 animalRouter.put("/media/:id", updateAnimalMedia);
 
-module.exports = animalRouter;
+export default animalRouter;

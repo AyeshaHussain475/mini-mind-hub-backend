@@ -1,9 +1,6 @@
-const path = require("path");
-const Animal = require("../models/animal");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+import Animal from "../models/Animal.js";
 
-exports.postAnimalMedia = async (req, res) => {
+export const postAnimalMedia = async (req, res) => {
   try {
     const existingUrl = await Animal.findOne({
       name: req.body.name,
@@ -41,7 +38,7 @@ exports.postAnimalMedia = async (req, res) => {
   }
 };
 
-exports.getAnimalsMedia = async (req, res) => {
+export const getAnimalsMedia = async (req, res) => {
   try {
     const animals = await Animal.find();
 
@@ -64,7 +61,7 @@ exports.getAnimalsMedia = async (req, res) => {
   }
 };
 
-exports.updateAnimalMedia = async (req, res) => {
+export const updateAnimalMedia = async (req, res) => {
   try {
     const { name, imageUrl, soundUrl } = req.body;
 

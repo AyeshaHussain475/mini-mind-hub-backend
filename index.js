@@ -1,9 +1,13 @@
-const express = require("express");
-const env = require("dotenv");
-const mongoose = require("mongoose");
-const routes = require("./routes/routes");
-const cors = require("cors");
-const path = require("path");
+import express from "express";
+import env from "dotenv";
+import cors from "cors";
+import path from "path";
+import mongoose from "mongoose";
+import routes from "./src/routes/index.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 env.config();
@@ -23,8 +27,13 @@ app.use("/mini", routes);
 app.use("/images", express.static("uploads"));
 
 app.get("/mini/images/:imageName", (req, res) => {
-  const filePath = path.join(__dirname, "uploads", req.params.imageName);
-  res.sendFile(filePath);
+  try {
+    const filePath = path.join(__dirname, "uploads", req.params.imageName);
+    res.sendFile(filePath);
+  } catch (err) {
+    console.log("error", err);
+    res.status(500).json({ error: "something went wrong" });
+  }
 });
 
 app.listen(process.env.PORT, "localhost", () => {
