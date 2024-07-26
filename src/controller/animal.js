@@ -11,8 +11,9 @@ export const postAnimalMedia = async (req, res) => {
         message: "Media already exist",
       });
     }
-    const { name, soundUrl } = req.body;
-    const imageUrl = req.file.filename;
+    const { name } = req.body;
+    const imageUrl = req.files["imageUrl"][0].filename;
+    const soundUrl = req.files["soundUrl"][0].filename;
 
     const newUrl = new Animal({
       name,
@@ -31,6 +32,7 @@ export const postAnimalMedia = async (req, res) => {
       return res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal server error",
       error,
@@ -41,17 +43,6 @@ export const postAnimalMedia = async (req, res) => {
 export const getAnimalsMedia = async (req, res) => {
   try {
     const animals = await Animal.find();
-
-    // const filePath = (imageName) =>
-    //   path.join(__dirname, "..", "uploads", imageName);
-
-    // const updatedAnimals = animals.map((a) => {
-    //   const o = a.toObject();
-    //   return {
-    //     ...o,
-    //     imageUrl: filePath(o.imageUrl),
-    //   };
-    // });
 
     return res.json(animals);
   } catch (error) {

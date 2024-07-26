@@ -16,10 +16,22 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const soundStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/sounds");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
 const animalRouter = express.Router();
 
-animalRouter.post("/media", upload.single("imageUrl"), postAnimalMedia);
+const upload = multer({ storage: storage }).fields([
+  { name: "imageUrl" },
+  { name: "soundUrl" },
+]);
+animalRouter.post("/media", upload, postAnimalMedia);
 animalRouter.get("/media", getAnimalsMedia);
 animalRouter.put("/media/:id", updateAnimalMedia);
 
