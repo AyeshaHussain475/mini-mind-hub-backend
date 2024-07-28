@@ -42,7 +42,11 @@ export const postAnimalMedia = async (req, res) => {
 
 export const getAnimalsMedia = async (req, res) => {
   try {
-    const animals = await Animal.find();
+    const page = parseInt(req.query._page);
+    const limit = parseInt(req.query._limit);
+    // Calculate the number of items to skip
+    const skip = (page - 1) * limit;
+    const animals = await Animal.find().skip(skip).limit(limit);
 
     return res.json(animals);
   } catch (error) {
