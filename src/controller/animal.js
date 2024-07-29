@@ -12,6 +12,7 @@ export const postAnimalMedia = async (req, res) => {
       });
     }
     const { name } = req.body;
+
     const imageUrl = req.files["imageUrl"][0].filename;
     const soundUrl = req.files["soundUrl"][0].filename;
 
@@ -42,14 +43,27 @@ export const postAnimalMedia = async (req, res) => {
 
 export const getAnimalsMedia = async (req, res) => {
   try {
-    const page = parseInt(req.query._page);
-    const limit = parseInt(req.query._limit);
-    // Calculate the number of items to skip
-    const skip = (page - 1) * limit;
-    const animals = await Animal.find().skip(skip).limit(limit);
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const search = req.query.search ?? "";
 
-    return res.json(animals);
+    const regex = new RegExp(search, "i");
+
+    const skip = (page - 1) * limit;
+
+    const animals = await Animal.find({ name: regex }).skip(skip).limit(limit);
+    const totalAnimals = await Animal.countDocuments({ name: regex });
+
+    const totalPages = Math.ceil(totalAnimals / limit);
+
+    return res.json({
+      animals,
+      count: totalAnimals,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
+    console.error(error.toString());
     return res
       .status(500)
       .json({ message: "Error getting animal medias", error });
