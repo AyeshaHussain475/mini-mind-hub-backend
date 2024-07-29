@@ -51,7 +51,10 @@ export const getAnimalsMedia = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    const animals = await Animal.find({ name: regex }).skip(skip).limit(limit);
+    const animals = await Animal.find({ name: regex })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
     const totalAnimals = await Animal.countDocuments({ name: regex });
 
     const totalPages = Math.ceil(totalAnimals / limit);
