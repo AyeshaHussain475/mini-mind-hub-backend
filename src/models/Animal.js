@@ -15,11 +15,18 @@ const animalSchema = mongoose.Schema(
       enum: ["mammals", "reptiles", "birds", "fish"],
       required: true,
     },
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    soundUrl: {
+    images: [
+      {
+        name: {
+          type: String,
+        },
+        isPrimary: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+    sound: {
       type: String,
       required: true,
     },

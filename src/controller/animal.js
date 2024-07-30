@@ -2,26 +2,26 @@ import Animal from "../models/Animal.js";
 
 export const postAnimalMedia = async (req, res) => {
   try {
-    const existingUrl = await Animal.findOne({
-      name: req.body.name,
-    }).exec();
+    const { name, description, type } = req.body;
 
-    if (existingUrl) {
+    const animalExists = await Animal.findOne({ name }).exec();
+    if (animalExists) {
       return res.status(400).json({
         message: "Media already exist",
       });
     }
-    const { name, description, type } = req.body;
 
-    const imageUrl = req.files["imageUrl"][0].filename;
-    const soundUrl = req.files["soundUrl"][0].filename;
+    const images = req.files["images"].map((image) => ({
+      name: image.filename,
+    }));
+    const sound = req.files["sound"][0]?.filename;
 
     const newUrl = new Animal({
       name,
       description,
       type,
-      imageUrl,
-      soundUrl,
+      images,
+      sound,
     });
 
     const savedUrl = await newUrl.save();
@@ -30,9 +30,9 @@ export const postAnimalMedia = async (req, res) => {
       return res.status(201).json({
         message: "Media is created sucessfully",
       });
-    } else {
-      return res.status(400).json({ message: "Something went wrong" });
     }
+
+    return res.status(400).json({ message: "Something went wrong" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
