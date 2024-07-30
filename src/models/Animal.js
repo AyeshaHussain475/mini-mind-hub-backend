@@ -7,6 +7,14 @@ const animalSchema = mongoose.Schema(
       required: [true, "enter animal name"],
       unique: true,
     },
+    description: {
+      type: String,
+    },
+    type: {
+      type: String,
+      enum: ["mammals", "reptiles", "birds", "fish"],
+      required: true,
+    },
     imageUrl: {
       type: String,
       required: true,

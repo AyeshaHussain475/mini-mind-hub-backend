@@ -11,19 +11,20 @@ export const postAnimalMedia = async (req, res) => {
         message: "Media already exist",
       });
     }
-    const { name } = req.body;
+    const { name, description, type } = req.body;
 
     const imageUrl = req.files["imageUrl"][0].filename;
     const soundUrl = req.files["soundUrl"][0].filename;
 
     const newUrl = new Animal({
       name,
+      description,
+      type,
       imageUrl,
       soundUrl,
     });
 
     const savedUrl = await newUrl.save();
-    console.log(req.body);
 
     if (savedUrl) {
       return res.status(201).json({
