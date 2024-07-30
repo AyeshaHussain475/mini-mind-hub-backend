@@ -11,8 +11,9 @@ export const postAnimalMedia = async (req, res) => {
       });
     }
 
-    const images = req.files["images"].map((image) => ({
+    const images = req.files["images"].map((image, index) => ({
       name: image.filename,
+      isPrimary: index === 0,
     }));
     const sound = req.files["sound"][0]?.filename;
 
