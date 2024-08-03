@@ -3,6 +3,7 @@ import {
   postAnimalMedia,
   getAnimalsMedia,
   updateAnimalMedia,
+  deleteAnimal,
 } from "../controller/animal.js";
 import multer from "multer";
 
@@ -27,5 +28,6 @@ animalRouter.post(
 );
 animalRouter.get("/media", getAnimalsMedia);
 animalRouter.put("/media/:id", updateAnimalMedia);
+animalRouter.delete("/media/:id", deleteAnimal);
 
 export default animalRouter;

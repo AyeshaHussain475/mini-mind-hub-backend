@@ -15,6 +15,7 @@ export const postAnimalMedia = async (req, res) => {
       name: image.filename,
       isPrimary: index === 0,
     }));
+    console.log(images, "data");
     const sound = req.files["sound"][0]?.filename;
 
     const newUrl = new Animal({
@@ -96,6 +97,26 @@ export const updateAnimalMedia = async (req, res) => {
     console.error("Error updating the animal", error);
     return res.status(500).json({
       message: "Internal server error",
+    });
+  }
+};
+
+export const deleteAnimal = async (req, res) => {
+  try {
+    const animal = await Animal.findByIdAndDelete(req.params.id);
+
+    if (!animal) {
+      return res.status(404).json({
+        message: "Animal not found ",
+      });
+    }
+    return res
+      .status(204)
+      .json({ message: "Animal is deleted successfully", animal });
+  } catch (error) {
+    console.log("Error in deletion", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };
