@@ -15,7 +15,7 @@ export const postAnimalMedia = async (req, res) => {
       name: image.filename,
       isPrimary: index === 0,
     }));
-    console.log(images, "data");
+
     const sound = req.files["sound"][0]?.filename;
 
     const newUrl = new Animal({
@@ -49,16 +49,22 @@ export const getAnimalsMedia = async (req, res) => {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
     const search = req.query.search ?? "";
+    const type = req.query.type ?? "";
+
+    const regexType = new RegExp(type, "i");
 
     const regex = new RegExp(search, "i");
 
     const skip = (page - 1) * limit;
 
-    const animals = await Animal.find({ name: regex })
+    const animals = await Animal.find({ name: regex, type: regexType })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
-    const totalAnimals = await Animal.countDocuments({ name: regex });
+    const totalAnimals = await Animal.countDocuments({
+      name: regex,
+      type: regexType,
+    });
 
     const totalPages = Math.ceil(totalAnimals / limit);
 
