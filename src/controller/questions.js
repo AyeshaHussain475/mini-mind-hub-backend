@@ -41,3 +41,16 @@ export const postQuestion = async (req, res) => {
     });
   }
 };
+
+export const getQuestions = async (req, res) => {
+  try {
+    const questions = await Question.find().exec();
+    return res.json({
+      questions,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Internal Server Error",
+    });
+  }
+};
