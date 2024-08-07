@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import Quiz from "../models/Quiz.js";
+import Question from "../models/Question.js";
 
 export const postQuiz = async (req, res) => {
   try {
@@ -44,6 +46,28 @@ export const getQuizzes = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Internal Sever error",
+      error,
+    });
+  }
+};
+
+export const getQuizQuestions = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    console.log(quizId);
+
+    if (!mongoose.Types.ObjectId.isValid(quizId)) {
+      return res.status(400).json("Quiz does not exists");
+    }
+
+    const questions = await Question.find({ quizId }).exec();
+    return res.json({
+      questions,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
       error,
     });
   }
