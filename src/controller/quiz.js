@@ -34,3 +34,17 @@ export const postQuiz = async (req, res) => {
     });
   }
 };
+
+export const getQuizzes = async (req, res) => {
+  try {
+    const quizzes = await Quiz.find().exec();
+    return res.json({
+      quizzes,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Sever error",
+      error,
+    });
+  }
+};
