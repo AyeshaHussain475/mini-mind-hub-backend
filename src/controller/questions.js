@@ -2,18 +2,18 @@ import Question from "../models/Question.js";
 
 export const postQuestion = async (req, res) => {
   try {
+    const { quizId } = req.params;
+    const { questionText, options, correctAnswer, explanation } = req.body;
+
     const existingQuestion = await Question.findOne({
       questionText: req.body.questionText,
     }).exec();
 
     if (existingQuestion) {
       return res.status(400).json({
-        message: "Question is already uploaded",
+        message: "Question already exists by this title",
       });
     }
-
-    const { questionText, quizId, options, correctAnswer, explanation } =
-      req.body;
 
     const newQuestion = new Question({
       questionText,
@@ -29,11 +29,11 @@ export const postQuestion = async (req, res) => {
       return res.status(200).json({
         message: "question is uploaded successfully",
       });
-    } else {
-      return res.status(400).json({
-        message: "Something went wrong",
-      });
     }
+
+    return res.status(400).json({
+      message: "Something went wrong",
+    });
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
@@ -44,10 +44,10 @@ export const postQuestion = async (req, res) => {
 
 export const getQuestions = async (req, res) => {
   try {
-    const questions = await Question.find().exec();
-    return res.json({
-      questions,
-    });
+    const { quizId } = req.params;
+    const questions = await Question.find({ quizId }).exec();
+
+    return res.json({ questions });
   } catch (error) {
     return res.status(400).json({
       message: "Internal Server Error",

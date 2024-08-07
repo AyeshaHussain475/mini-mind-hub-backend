@@ -2,7 +2,7 @@ import express from "express";
 import { signin, signup } from "../controller/auth.js";
 import animalRouter from "./animal.js";
 import mediaRouter from "./media.js";
-import { getQuizQuestions, getQuizzes, postQuiz } from "../controller/quiz.js";
+import { getQuiz, getQuizzes, createQuiz } from "../controller/quiz.js";
 import { getQuestions, postQuestion } from "../controller/questions.js";
 
 const router = express.Router();
@@ -11,10 +11,13 @@ router.post("/signup", signup);
 router.post("/signin", signin);
 router.use("/animal", animalRouter);
 router.use("/media", mediaRouter);
-router.post("/postquiz", postQuiz);
-router.get("/getquizzes", getQuizzes);
-router.post("/postquestion", postQuestion);
-router.get("/getquestions", getQuestions);
-router.get("/getquizquestions/:quizId", getQuizQuestions);
+
+// separate route
+router.post("/quiz", createQuiz);
+router.get("/quiz", getQuizzes);
+router.get("/quiz/:quizId", getQuiz);
+
+router.post("/quiz/:quizId/question", postQuestion);
+router.get("/quiz/:quizId/question", getQuestions);
 
 export default router;
