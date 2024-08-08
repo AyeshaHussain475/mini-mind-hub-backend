@@ -4,7 +4,16 @@ const QuizAttemptSchema = new mongoose.Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User" },
     quizId: { type: Schema.Types.ObjectId, ref: "Quiz" },
+    startTime: Date,
+    endTime: Date,
     Score: String,
+    isPassed: Boolean,
+    answers: [
+      {
+        questionId: { type: Schema.Types.ObjectId, ref: "Question" },
+        answer: String,
+      },
+    ],
   },
   { timestamps: true }
 );
