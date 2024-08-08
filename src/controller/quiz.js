@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Quiz from "../models/Quiz.js";
 import Question from "../models/Question.js";
+import QuizAttempt from "../models/QuizAttempt.js";
 
 export const createQuiz = async (req, res) => {
   try {
@@ -65,6 +66,50 @@ export const getQuiz = async (req, res) => {
     return res.status(500).json({
       message: "Internal server error",
       error,
+    });
+  }
+};
+
+export const attemptQuiz = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    const { userId, answers } = req.body;
+
+    let score = 0;
+
+    for (let i = 0; i < answers.length; i++) {
+      const question = await Question.findById(answers[i].questionId);
+      if (question.correctAnswer === answers[i].answer) {
+        score += 1;
+      }
+    }
+
+    const passingScore = answers.length;
+    const isPassed = score >= passingScore;
+
+    const newAttempt = new QuizAttempt({
+      quizId,
+      userId,
+      answers,
+      score,
+      isPassed,
+    });
+
+    const saveAttempt = newAttempt.save();
+
+    if (saveAttempt) {
+      return res.status(200).json({
+        message: "Quiz is saved successfully",
+        attempt: saveAttempt,
+      });
+    }
+    return res.status(400).json({
+      message: "Unable to save the quiz",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal server error",
     });
   }
 };
