@@ -113,3 +113,29 @@ export const attemptQuiz = async (req, res) => {
     });
   }
 };
+
+export const updateQuiz = async (req, res) => {
+  const { title, description, duration, attempts } = req.body;
+  const { quizId } = req.params;
+  try {
+    const updatedQuiz = await Quiz.findByIdAndUpdate(
+      quizId,
+
+      { title, description, duration, attempts },
+      {
+        new: true,
+      }
+    );
+    if (!updatedQuiz) {
+      return res.status(201).json({
+        message: "Quiz not found",
+      });
+    }
+    return res.status(200).json(updatedQuiz);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error,
+    });
+  }
+};
