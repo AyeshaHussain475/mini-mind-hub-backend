@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {
@@ -49,13 +50,22 @@ export const signin = async (req, res) => {
   }
 
   if (existingUser.authenticate(req.body.password)) {
+    const token = jwt.sign(
+      existingUser.toObject(),
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: 3600,
+      }
+    );
+
     return res.status(200).json({
       message: "Login Successfully",
       user: existingUser,
-    });
-  } else {
-    return res.status(401).json({
-      message: "Incorrect password",
+      token,
     });
   }
+
+  return res.status(401).json({
+    message: "Incorrect password",
+  });
 };

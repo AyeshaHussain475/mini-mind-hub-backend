@@ -7,23 +7,28 @@ import {
   getQuizzes,
   createQuiz,
   attemptQuiz,
+  updateQuiz,
 } from "../controller/quiz.js";
 import { getQuestions, postQuestion } from "../controller/questions.js";
+import authenticate from "../middlewares/authenticate.js";
 
 const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/signin", signin);
-router.use("/animal", animalRouter);
+router.use("/animal", authenticate, animalRouter);
+
+// no need to authenticate media route
 router.use("/media", mediaRouter);
 
 // separate route
-router.post("/quiz", createQuiz);
-router.get("/quiz", getQuizzes);
-router.get("/quiz/:quizId", getQuiz);
-router.post("/quiz/:quizId/attempt", attemptQuiz);
+router.post("/quiz", authenticate, createQuiz);
+router.get("/quiz", authenticate, getQuizzes);
+router.get("/quiz/:quizId", authenticate, getQuiz);
+router.post("/quiz/:quizId/attempt", authenticate, attemptQuiz);
+router.put("/quiz/:quizId", updateQuiz);
 
-router.post("/quiz/:quizId/question", postQuestion);
-router.get("/quiz/:quizId/question", getQuestions);
+router.post("/quiz/:quizId/question", authenticate, postQuestion);
+router.get("/quiz/:quizId/question", authenticate, getQuestions);
 
 export default router;
