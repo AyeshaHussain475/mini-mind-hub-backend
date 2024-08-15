@@ -15,6 +15,7 @@ const authenticate = async (req, res, next) => {
       throw new Error("Failed to authenticate");
     }
 
+    req.user = decodedUser;
     next();
   } catch (err) {
     console.error("Authentication Error: ", err);

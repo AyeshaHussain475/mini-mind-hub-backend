@@ -34,10 +34,24 @@ export const createQuiz = async (req, res) => {
 
 export const getQuizzes = async (req, res) => {
   try {
-    const quizzes = await Quiz.find().exec();
+    const quizzes = await Quiz.find();
+    const quizzesWithAttempts = [...quizzes];
 
-    return res.json({ quizzes });
+    for (let i = 0; i < quizzes.length; i++) {
+      const quiz = quizzes[i];
+      const quizAttempts = await QuizAttempt.find({
+        quizId: quiz._id,
+        userId: req.user._id,
+      });
+      quizzesWithAttempts[i] = {
+        ...quiz.toObject(),
+        attemptsRemaining: quiz.attempts - quizAttempts.length,
+      };
+    }
+
+    return res.json({ quizzes: quizzesWithAttempts });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       message: "Internal Sever error",
       error,
