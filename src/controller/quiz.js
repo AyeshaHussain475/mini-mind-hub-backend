@@ -129,27 +129,69 @@ export const attemptQuiz = async (req, res) => {
 };
 
 export const updateQuiz = async (req, res) => {
-  const { title, description, duration, attempts } = req.body;
+  const {
+    title,
+    description,
+    duration,
+    attempts,
+    newQuestions,
+    deletedQuestionIds,
+  } = req.body;
   const { quizId } = req.params;
+  const session = await mongoose.startSession();
+
   try {
+    session.startTransaction();
+
     const updatedQuiz = await Quiz.findByIdAndUpdate(
       quizId,
-
       { title, description, duration, attempts },
-      {
-        new: true,
-      }
+      { new: true, session }
     );
+
     if (!updatedQuiz) {
-      return res.status(201).json({
+      await session.abortTransaction();
+      return res.status(404).json({
         message: "Quiz not found",
       });
     }
+
+    if (deletedQuestionIds && deletedQuestionIds.length > 0) {
+      await Question.deleteMany(
+        { _id: { $in: deletedQuestionIds } },
+        { session }
+      );
+    }
+
+    if (newQuestions && newQuestions.length > 0) {
+      const isValidQuestionSchema = ({
+        quizId,
+        questionText,
+        options,
+        correctAnswer,
+      }) => quizId && questionText && correctAnswer && Array.isArray(options);
+
+      for (let i = 0; i < newQuestions.length; i++) {
+        if (!isValidQuestionSchema(newQuestions[i])) {
+          await session.abortTransaction();
+          return res.status(400).json({
+            message: `Invalid question schema at index ${i}`,
+            error: "Validation failed",
+          });
+        }
+      }
+
+      await Question.insertMany(newQuestions, { session });
+    }
+    await session.commitTransaction();
     return res.status(200).json(updatedQuiz);
   } catch (error) {
+    await session.abortTransaction();
     return res.status(500).json({
       message: "Internal Server Error",
       error,
     });
+  } finally {
+    session.endSession();
   }
 };
