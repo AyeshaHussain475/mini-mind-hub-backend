@@ -5,16 +5,6 @@ export const postQuestion = async (req, res) => {
     const { quizId } = req.params;
     const { questionText, options, correctAnswer, explanation } = req.body;
 
-    const existingQuestion = await Question.findOne({
-      questionText: req.body.questionText,
-    }).exec();
-
-    if (existingQuestion) {
-      return res.status(400).json({
-        message: "Question already exists by this title",
-      });
-    }
-
     const newQuestion = new Question({
       questionText,
       quizId,
@@ -22,7 +12,6 @@ export const postQuestion = async (req, res) => {
       correctAnswer,
       explanation,
     });
-
     const saveQuestion = await newQuestion.save();
 
     if (saveQuestion) {
