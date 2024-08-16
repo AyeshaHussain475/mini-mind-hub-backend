@@ -54,7 +54,7 @@ export const signin = async (req, res) => {
       existingUser.toObject(),
       process.env.JWT_SECRET_KEY,
       {
-        expiresIn: 3600,
+        expiresIn: 3600 * 24 * 7, // 7 days
       }
     );
 
