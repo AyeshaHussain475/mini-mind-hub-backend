@@ -69,3 +69,31 @@ export const signin = async (req, res) => {
     message: "Incorrect password",
   });
 };
+
+export const update = async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+  const existingUser = await User.findOne({ email });
+
+  // !existingUser.authenticate(password) Question M
+  // done it by id ?
+  if (!existingUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  existingUser.firstName = firstName || existingUser.firstName;
+  existingUser.lastName = lastName || existingUser.lastName;
+  existingUser.email = email || existingUser.email;
+  existingUser.password = password || existingUser.password;
+
+  const updateUser = await existingUser.save();
+
+  if (updateUser) {
+    return res.status(200).json({
+      message: "User is updated succesfully",
+    });
+  } else {
+    return res.status(400).json({
+      message: "User is not saved successfully",
+    });
+  }
+};
