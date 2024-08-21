@@ -41,7 +41,8 @@ export const signup = async (req, res) => {
 };
 
 export const signin = async (req, res) => {
-  const existingUser = await User.findOne({ email: req.body.email });
+  const { email, password } = req.body;
+  let existingUser = await User.findOne({ email });
 
   if (!existingUser) {
     return res.status(400).json({
@@ -49,7 +50,7 @@ export const signin = async (req, res) => {
     });
   }
 
-  if (existingUser.authenticate(req.body.password)) {
+  if (existingUser.authenticate(password)) {
     const token = jwt.sign(
       existingUser.toObject(),
       process.env.JWT_SECRET_KEY,
@@ -57,7 +58,7 @@ export const signin = async (req, res) => {
         expiresIn: 3600 * 24 * 7, // 7 days
       }
     );
-
+    existingUser = [{ ...existingUser.toObject(), password: password }];
     return res.status(200).json({
       message: "Login Successfully",
       user: existingUser,
