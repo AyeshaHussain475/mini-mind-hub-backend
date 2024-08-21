@@ -6,7 +6,6 @@ const QuestionSchema = new mongoose.Schema(
     questionText: {
       type: String,
       required: true,
-      unique: true,
     },
     options: [
       {
