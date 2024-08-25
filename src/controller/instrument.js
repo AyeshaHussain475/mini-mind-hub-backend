@@ -38,3 +38,18 @@ export const createInstrument = async (req, res) => {
     });
   }
 };
+
+export const getInstruments = async (req, res) => {
+  const instruments = await Instruments.find();
+
+  if (!instruments) {
+    return res.status(400).json({
+      message: "no instruments exists!",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Instruments",
+    instruments,
+  });
+};

@@ -1,10 +1,10 @@
 import express from "express";
-import { createInstrument } from "../controller/instrument.js";
+import { createInstrument, getInstruments } from "../controller/instrument.js";
 import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "myInstruments/"); //folder where my Instruments files will be saved
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now();
@@ -17,6 +17,7 @@ const uploads = upload.fields([{ name: "image" }, { name: "sound" }]);
 
 const instrumentRouter = express.Router();
 
-instrumentRouter.post("/", uploads, createInstrument);
+instrumentRouter.post("/media", uploads, createInstrument);
+instrumentRouter.get("/media", getInstruments);
 
 export default instrumentRouter;
