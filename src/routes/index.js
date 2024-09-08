@@ -14,7 +14,7 @@ router.post("/signin", signin);
 router.put("/edit", update);
 router.use("/animal", authenticate, animalRouter);
 router.use("/quiz", authenticate, quizRouter);
-router.use("/instrument", instrumentRouter);
+router.use("/instrument", authenticate, instrumentRouter);
 
 // no need to authenticate media route
 router.use("/media", mediaRouter);

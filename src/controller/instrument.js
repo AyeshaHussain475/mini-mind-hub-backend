@@ -53,3 +53,24 @@ export const getInstruments = async (req, res) => {
     instruments,
   });
 };
+
+export const deleteInstrument = async (req, res) => {
+  try {
+    const instrument = await Instruments.findByIdAndDelete(req.params.id);
+
+    if (!instrument) {
+      return res.status(400).json({
+        message: "Instrument does not exists",
+      });
+    }
+    return res.status(200).json({
+      message: "Instrument is deleted successfully!",
+    });
+  } catch (error) {
+    console.log("Error in deletion", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error,
+    });
+  }
+};

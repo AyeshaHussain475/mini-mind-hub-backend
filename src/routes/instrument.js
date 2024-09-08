@@ -1,5 +1,9 @@
 import express from "express";
-import { createInstrument, getInstruments } from "../controller/instrument.js";
+import {
+  createInstrument,
+  deleteInstrument,
+  getInstruments,
+} from "../controller/instrument.js";
 import multer from "multer";
 
 const storage = multer.diskStorage({
@@ -19,5 +23,6 @@ const instrumentRouter = express.Router();
 
 instrumentRouter.post("/media", uploads, createInstrument);
 instrumentRouter.get("/media", getInstruments);
+instrumentRouter.delete("/media/:id", deleteInstrument);
 
 export default instrumentRouter;
