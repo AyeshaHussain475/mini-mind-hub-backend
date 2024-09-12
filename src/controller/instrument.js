@@ -74,3 +74,41 @@ export const deleteInstrument = async (req, res) => {
     });
   }
 };
+
+export const updateInstrument = async (req, res) => {
+  try {
+    const { name } = req.body;
+    console.log(req.files, "fileslist");
+    const image = req.files["image"]?.[0]?.filename;
+    const sound = req.files["sound"]?.[0]?.filename;
+
+    const instrument = await Instruments.findById(req.params.id);
+
+    if (!instrument) {
+      return res.status(400).json({
+        message: "Instrument does not found!",
+      });
+    }
+
+    instrument.name = name || instrument.name;
+    instrument.image = image || instrument.image;
+    instrument.sound = sound || instrument.sound;
+
+    const updateInstrument = await instrument.save();
+
+    if (updateInstrument) {
+      return res.status(200).json({
+        message: "Instrument is updated successfully!",
+      });
+    } else {
+      return res.status(400).json({
+        message: "Instrument is not saved successfully!",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      error,
+    });
+  }
+};

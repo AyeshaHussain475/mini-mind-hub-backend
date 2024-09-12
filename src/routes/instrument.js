@@ -3,6 +3,7 @@ import {
   createInstrument,
   deleteInstrument,
   getInstruments,
+  updateInstrument,
 } from "../controller/instrument.js";
 import multer from "multer";
 
@@ -24,5 +25,6 @@ const instrumentRouter = express.Router();
 instrumentRouter.post("/media", uploads, createInstrument);
 instrumentRouter.get("/media", getInstruments);
 instrumentRouter.delete("/media/:id", deleteInstrument);
+instrumentRouter.put("/media/:id", uploads, updateInstrument);
 
 export default instrumentRouter;
