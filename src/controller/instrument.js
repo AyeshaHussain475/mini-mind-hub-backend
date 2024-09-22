@@ -3,7 +3,7 @@ import Instruments from "../models/Instruments.js";
 export const createInstrument = async (req, res) => {
   try {
     const { name } = req.body;
-    const image = req.files["image"][0]?.filename;
+    const image = req.files.image[0]?.filename;
     const sound = req.files["sound"][0]?.filename;
 
     const existingInstrument = await Instruments.findOne({ name });
@@ -78,7 +78,6 @@ export const deleteInstrument = async (req, res) => {
 export const updateInstrument = async (req, res) => {
   try {
     const { name } = req.body;
-    console.log(req.files, "fileslist");
     const image = req.files["image"]?.[0]?.filename;
     const sound = req.files["sound"]?.[0]?.filename;
 
@@ -106,6 +105,29 @@ export const updateInstrument = async (req, res) => {
       });
     }
   } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
+export const getInstrument = async (req, res) => {
+  try {
+    const instrument = await Instruments.findById(req.params.id);
+    console.log("issue", instrument);
+
+    if (!instrument) {
+      return res.status(400).json({
+        message: "Instrument not found",
+      });
+    }
+    return res.json({
+      message: "Instrument found successfully!",
+      instrument,
+    });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal server error",
       error,

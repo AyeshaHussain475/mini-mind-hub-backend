@@ -2,6 +2,7 @@ import express from "express";
 import {
   createInstrument,
   deleteInstrument,
+  getInstrument,
   getInstruments,
   updateInstrument,
 } from "../controller/instrument.js";
@@ -26,5 +27,6 @@ instrumentRouter.post("/media", uploads, createInstrument);
 instrumentRouter.get("/media", getInstruments);
 instrumentRouter.delete("/media/:id", deleteInstrument);
 instrumentRouter.put("/media/:id", uploads, updateInstrument);
+instrumentRouter.get("/media/:id", getInstrument);
 
 export default instrumentRouter;
