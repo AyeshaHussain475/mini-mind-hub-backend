@@ -7,10 +7,7 @@ const PoemsSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    vidoe: {
-      type: String,
-    },
-    sound: {
+    video: {
       type: String,
     },
   },
