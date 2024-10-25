@@ -20,14 +20,11 @@ const storage = multer.diskStorage({
 const animalRouter = express.Router();
 
 const upload = multer({ storage: storage });
+const uploads = upload.fields([{ name: "images" }, { name: "sound" }]);
 
-animalRouter.post(
-  "/media",
-  upload.fields([{ name: "images" }, { name: "sound" }]),
-  postAnimalMedia
-);
+animalRouter.post("/media", uploads, postAnimalMedia);
 animalRouter.get("/media", getAnimalsMedia);
-animalRouter.put("/media/:id", updateAnimalMedia);
+animalRouter.put("/media/:id", uploads, updateAnimalMedia);
 animalRouter.delete("/media/:id", deleteAnimal);
 
 export default animalRouter;

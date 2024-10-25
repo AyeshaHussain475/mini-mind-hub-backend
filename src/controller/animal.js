@@ -84,21 +84,38 @@ export const getAnimalsMedia = async (req, res) => {
 
 export const updateAnimalMedia = async (req, res) => {
   try {
-    const { name, imageUrl, soundUrl } = req.body;
+    const { name, description, type } = req.body;
+    const image = req.files?.images?.[0]?.filename;
+    const sound = req.files?.sound?.[0]?.filename;
 
-    const updateAnimalMedia = await Animal.findByIdAndUpdate(
-      req.params.id,
-      { name, imageUrl, soundUrl },
-      { new: true }
-    );
+    const AnimalMedia = await Animal.findById(req.params.id);
 
-    if (!updateAnimalMedia) {
+    if (!AnimalMedia) {
       return res.status(404).json({
         message: "media not found",
       });
     }
 
-    res.json(updateAnimalMedia);
+    AnimalMedia.name = name || AnimalMedia.name;
+    AnimalMedia.description = description || AnimalMedia.description;
+    AnimalMedia.type = type || AnimalMedia.type;
+    AnimalMedia.image = image || AnimalMedia.image;
+    AnimalMedia.sound = sound || AnimalMedia.sound;
+
+    const updatedAnimal = await AnimalMedia.save();
+
+    if (updatedAnimal) {
+      return res.status(200).json({
+        message: "Animal is updated successfully!",
+      });
+    } else {
+      return (
+        res.status(400),
+        json({
+          messgae: "Media is not updated!",
+        })
+      );
+    }
   } catch (error) {
     console.error("Error updating the animal", error);
     return res.status(500).json({
