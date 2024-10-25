@@ -4,6 +4,7 @@ import {
   getAnimalsMedia,
   updateAnimalMedia,
   deleteAnimal,
+  getAnimalMedia,
 } from "../controller/animal.js";
 import multer from "multer";
 
@@ -24,6 +25,7 @@ const uploads = upload.fields([{ name: "images" }, { name: "sound" }]);
 
 animalRouter.post("/media", uploads, postAnimalMedia);
 animalRouter.get("/media", getAnimalsMedia);
+animalRouter.get("/media/:id", getAnimalMedia);
 animalRouter.put("/media/:id", uploads, updateAnimalMedia);
 animalRouter.delete("/media/:id", deleteAnimal);
 

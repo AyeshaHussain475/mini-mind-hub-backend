@@ -82,6 +82,27 @@ export const getAnimalsMedia = async (req, res) => {
   }
 };
 
+export const getAnimalMedia = async (req, res) => {
+  try {
+    const animal = await Animal.findById(req.params.id);
+
+    if (!animal) {
+      return res.status(404).json({
+        message: "Animal does not exists",
+      });
+    } else {
+      return res.status(200).json({
+        animal,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server error",
+      error,
+    });
+  }
+};
 export const updateAnimalMedia = async (req, res) => {
   try {
     const { name, description, type } = req.body;
