@@ -1,5 +1,11 @@
 import express from "express";
-import { getUsers, signin, signup, update } from "../controller/auth.js";
+import {
+  deleteUser,
+  getUsers,
+  signin,
+  signup,
+  update,
+} from "../controller/auth.js";
 import animalRouter from "./animal.js";
 import quizRouter from "./quiz.js";
 import mediaRouter from "./media.js";
@@ -15,6 +21,7 @@ router.post("/signup", signup);
 router.post("/signin", signin);
 router.put("/edit", update);
 router.get("/users", getUsers);
+router.delete("/user/:id", deleteUser);
 router.use("/animal", authenticate, animalRouter);
 router.use("/quiz", authenticate, quizRouter);
 router.use("/instrument", authenticate, instrumentRouter);

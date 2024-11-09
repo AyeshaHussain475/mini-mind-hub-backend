@@ -119,3 +119,21 @@ export const getUsers = async (req, res) => {
     });
   }
 };
+
+export const deleteUser = async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deleteUser) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+    return res.status(200).json({
+      message: "User is deleted successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
