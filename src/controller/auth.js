@@ -98,3 +98,24 @@ export const update = async (req, res) => {
     });
   }
 };
+
+export const getUsers = async (req, res) => {
+  try {
+    const Users = await User.find();
+    if (Users) {
+      return res.status(200).json({
+        message: "All MiniMindHub Users",
+        Users,
+      });
+    } else {
+      return res.status(400).json({
+        message: "Something went wrong!",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error!",
+      error,
+    });
+  }
+};
