@@ -2,6 +2,7 @@ import express from "express";
 import {
   attemptQuiz,
   createQuiz,
+  deleteQuiz,
   getQuiz,
   getQuizzes,
   updateQuiz,
@@ -12,6 +13,7 @@ const router = express.Router();
 
 router.post("/", createQuiz);
 router.get("/", getQuizzes);
+router.delete("/", deleteQuiz);
 router.get("/:quizId", getQuiz);
 router.post("/:quizId/attempt", attemptQuiz);
 router.put("/:quizId", updateQuiz);
