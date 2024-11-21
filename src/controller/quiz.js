@@ -87,7 +87,28 @@ export const getQuiz = async (req, res) => {
 export const attemptQuiz = async (req, res) => {
   try {
     const { quizId } = req.params;
-    const { userId, answers } = req.body;
+    const { userId, answers, createAttempt, attemptId } = req.body;
+
+    // create attempt as soon as user opens quiz
+    if (createAttempt) {
+      const quizAttempt = new QuizAttempt({
+        quizId,
+        userId,
+        score: 0,
+        isPassed: false,
+      });
+
+      const saveAttempt = await quizAttempt.save();
+
+      if (saveAttempt) {
+        return res.status(200).json({
+          message: "Quiz Attempt created successfully",
+          attempt: saveAttempt,
+        });
+      } else {
+        throw new Error("Failed to create attempt");
+      }
+    }
 
     let score = 0;
 
@@ -99,22 +120,18 @@ export const attemptQuiz = async (req, res) => {
     }
 
     const passingScore = answers.length;
-    const isPassed = score >= passingScore;
+    const isPassed = score >= passingScore / 2;
 
-    const newAttempt = new QuizAttempt({
-      quizId,
-      userId,
-      answers,
-      score,
-      isPassed,
-    });
+    const updatedAttempt = await QuizAttempt.findByIdAndUpdate(
+      attemptId,
+      { answers, score, isPassed },
+      { new: true }
+    );
 
-    const saveAttempt = newAttempt.save();
-
-    if (saveAttempt) {
+    if (updatedAttempt) {
       return res.status(200).json({
         message: "Quiz is saved successfully",
-        attempt: saveAttempt,
+        attempt: updatedAttempt,
       });
     }
     return res.status(400).json({
