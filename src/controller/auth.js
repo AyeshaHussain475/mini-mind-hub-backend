@@ -101,11 +101,92 @@ export const resetPassword = async (req, res) => {
       },
     });
 
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${existingUser._id}/${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Reset Your Password",
-      text: `${process.env.FRONTEND_URL}/reset-password/${existingUser._id}/${token}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #f8f9fa;
+            }
+            .email-container {
+              max-width: 600px;
+              margin: 20px auto;
+              background: #ffffff;
+              border: 1px solid #dddddd;
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            .email-header {
+              background-color: #007bff;
+              color: white;
+              text-align: center;
+              padding: 20px;
+            }
+            .email-header img {
+              max-width: 100px;
+              margin-bottom: 10px;
+            }
+            .email-header h1 {
+              margin: 0;
+              font-size: 24px;
+            }
+            .email-body {
+              padding: 20px;
+              line-height: 1.6;
+              color: #333333;
+            }
+            .email-body a {
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #ffffff;
+              text-decoration: none;
+              border-radius: 5px;
+            }
+            .email-footer {
+              background-color: #f1f1f1;
+              color: #666666;
+              text-align: center;
+              font-size: 12px;
+              padding: 15px;
+            }
+            .email-footer a {
+              color: #007bff;
+              text-decoration: none;
+            }
+          </style>
+        </head>
+        <body>
+        <div class="email-container" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px;">
+          <div class="email-header" style="text-align: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px;">
+            <img src="https://via.placeholder.com/100x50?text=Logo" alt="MiniMindHub Logo" style="margin-bottom: 10px;">
+            <h1 style="color: #333;">Reset Your Password</h1>
+          </div>
+          <div class="email-body" style="padding: 20px;">
+            <p style="color: #555;">Hi ${existingUser.firstName},</p>
+            <p style="color: #555;">We received a request to reset your password for your MiniMindHub account. You can reset your password by clicking the button below:</p>
+            <p style="text-align: center; margin: 20px 0;">
+              <a href="${resetLink}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+            </p>
+            <p style="color: #555;">If you didn’t request a password reset, please ignore this email. Your password will remain unchanged.</p>
+          </div>
+          <div class="email-footer" style="border-top: 1px solid #e0e0e0; padding-top: 15px; text-align: center; color: #777;">
+            <p>Need help? Contact our <a href="mailto:support@minimindhub.com" style="color: #007bff;">support team</a>.</p>
+            <p>&copy; ${new Date().getFullYear()} MiniMindHub. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+      `,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
