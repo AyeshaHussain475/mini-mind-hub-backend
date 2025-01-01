@@ -80,11 +80,32 @@ export const update = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const Users = await User.find();
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const search = req.query.search ?? "";
+
+    const firstNameRegex = new RegExp(search, "i");
+    const skip = (page - 1) * limit;
+
+    const Users = await User.find({
+      _id: { $ne: req.user._id },
+      firstName: firstNameRegex,
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    const totalUsers = await User.countDocuments({
+      firstName: firstNameRegex,
+    });
+    const totalPages = Math.ceil(totalUsers / limit);
+
     if (Users) {
       return res.status(200).json({
         message: "All MiniMindHub Users",
         Users,
+        count: totalUsers,
+        currentPage: page,
+        totalPages,
       });
     } else {
       return res.status(400).json({
@@ -92,6 +113,7 @@ export const getUsers = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal Server Error!",
       error,

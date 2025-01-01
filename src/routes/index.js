@@ -26,8 +26,9 @@ router.post("/signin", signin);
 router.post("/reset-password", resetPassword);
 router.post("/update-password", updatePassword);
 router.put("/edit", update);
-router.get("/users", getUsers);
-router.delete("/user/:id", deleteUser);
+// TODO: create a separate controller for /users routes
+router.get("/users", authenticate, getUsers);
+router.delete("/user/:id", authenticate, deleteUser);
 router.use("/animal", authenticate, animalRouter);
 router.use("/quiz", authenticate, quizRouter);
 router.use("/instrument", authenticate, instrumentRouter);
@@ -35,7 +36,6 @@ router.use("/deaf", authenticate, DeafRouter);
 
 // no need to authenticate media route
 router.use("/media", mediaRouter);
-
 router.use("/poems", poemsRouter);
 
 export default router;
