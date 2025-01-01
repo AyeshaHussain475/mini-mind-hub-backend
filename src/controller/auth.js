@@ -49,29 +49,31 @@ export const signin = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-  const existingUser = await User.findOne({ email });
+  try {
+    const { firstName, lastName } = req.body;
 
-  // !existingUser.authenticate(password) Question M
-  // done it by id ?
-  if (!existingUser) {
-    return res.status(404).json({ message: "User not found" });
-  }
+    if (!firstName || !lastName)
+      return res.status(400).json({ message: "Name field cannot be empty" });
 
-  existingUser.firstName = firstName || existingUser.firstName;
-  existingUser.lastName = lastName || existingUser.lastName;
-  existingUser.email = email || existingUser.email;
-  existingUser.password = password || existingUser.password;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { firstName, lastName },
+      { new: true }
+    );
 
-  const updateUser = await existingUser.save();
-
-  if (updateUser) {
+    if (!updatedUser) {
+      return res.status(400).json({
+        message: "User is not saved successfully",
+      });
+    }
     return res.status(200).json({
       message: "User is updated succesfully",
     });
-  } else {
-    return res.status(400).json({
-      message: "User is not saved successfully",
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+      error: error.message,
     });
   }
 };

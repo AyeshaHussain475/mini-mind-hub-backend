@@ -24,7 +24,7 @@ router.get("/verify-account", verifyOtp);
 router.post("/signin", signin);
 router.post("/reset-password", resetPassword);
 router.post("/update-password", updatePassword);
-router.put("/edit", update);
+router.put("/edit", authenticate, update);
 router.use("/users", authenticate, usersRouter);
 router.use("/animal", authenticate, animalRouter);
 router.use("/quiz", authenticate, quizRouter);

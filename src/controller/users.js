@@ -9,7 +9,7 @@ export const getUsers = async (req, res) => {
     const firstNameRegex = new RegExp(search, "i");
     const skip = (page - 1) * limit;
 
-    const Users = await User.find({
+    const users = await User.find({
       _id: { $ne: req.user._id },
       firstName: firstNameRegex,
     })
@@ -21,10 +21,10 @@ export const getUsers = async (req, res) => {
     });
     const totalPages = Math.ceil(totalUsers / limit);
 
-    if (Users) {
+    if (users) {
       return res.status(200).json({
         message: "All MiniMindHub Users",
-        Users,
+        users,
         count: totalUsers,
         currentPage: page,
         totalPages,
