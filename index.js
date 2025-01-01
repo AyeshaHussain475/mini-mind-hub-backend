@@ -25,6 +25,6 @@ mongoose
 app.use("/images", express.static("uploads"));
 app.use("/mini", routes);
 
-app.listen(process.env.PORT, "localhost", () => {
+app.listen(process.env.PORT, "0.0.0.0", () => {
   console.log(`Server is running on ${process.env.PORT}`);
 });
