@@ -1,7 +1,5 @@
 import express from "express";
 import {
-  deleteUser,
-  getUsers,
   resetPassword,
   updatePassword,
   signin,
@@ -12,6 +10,7 @@ import {
 import animalRouter from "./animal.js";
 import quizRouter from "./quiz.js";
 import mediaRouter from "./media.js";
+import usersRouter from "./users.js";
 
 import authenticate from "../middlewares/authenticate.js";
 import instrumentRouter from "./instrument.js";
@@ -26,9 +25,7 @@ router.post("/signin", signin);
 router.post("/reset-password", resetPassword);
 router.post("/update-password", updatePassword);
 router.put("/edit", update);
-// TODO: create a separate controller for /users routes
-router.get("/users", authenticate, getUsers);
-router.delete("/user/:id", authenticate, deleteUser);
+router.use("/users", authenticate, usersRouter);
 router.use("/animal", authenticate, animalRouter);
 router.use("/quiz", authenticate, quizRouter);
 router.use("/instrument", authenticate, instrumentRouter);

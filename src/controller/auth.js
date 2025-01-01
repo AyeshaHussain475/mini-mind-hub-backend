@@ -8,8 +8,6 @@ export const signin = async (req, res) => {
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
 
-    console.log({ existingUser }, "found");
-
     if (!existingUser) {
       return res.status(400).json({
         message: "User is not registered",
@@ -74,67 +72,6 @@ export const update = async (req, res) => {
   } else {
     return res.status(400).json({
       message: "User is not saved successfully",
-    });
-  }
-};
-
-export const getUsers = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-    const search = req.query.search ?? "";
-
-    const firstNameRegex = new RegExp(search, "i");
-    const skip = (page - 1) * limit;
-
-    const Users = await User.find({
-      _id: { $ne: req.user._id },
-      firstName: firstNameRegex,
-    })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-    const totalUsers = await User.countDocuments({
-      firstName: firstNameRegex,
-    });
-    const totalPages = Math.ceil(totalUsers / limit);
-
-    if (Users) {
-      return res.status(200).json({
-        message: "All MiniMindHub Users",
-        Users,
-        count: totalUsers,
-        currentPage: page,
-        totalPages,
-      });
-    } else {
-      return res.status(400).json({
-        message: "Something went wrong!",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Internal Server Error!",
-      error,
-    });
-  }
-};
-
-export const deleteUser = async (req, res) => {
-  try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
-    if (!deleteUser) {
-      return res.status(404).json({
-        message: "User not found!",
-      });
-    }
-    return res.status(200).json({
-      message: "User is deleted successfully!",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Internal Server Error!",
     });
   }
 };
