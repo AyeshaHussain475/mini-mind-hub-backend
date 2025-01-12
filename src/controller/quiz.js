@@ -43,8 +43,13 @@ export const getQuizzes = async (req, res) => {
         quizId: quiz._id,
         userId: req.user._id,
       });
+      const passedAttempt = quizAttempts.find(attempt => attempt.isPassed);
+
       quizzesWithAttempts[i] = {
         ...quiz.toObject(),
+        hasPassed: Boolean(passedAttempt),
+        score: passedAttempt?.toObject()?.score,
+        percentage: (passedAttempt?.score / passedAttempt?.answers.length) * 100 || 0, 
         attemptsRemaining: quiz.attempts - quizAttempts.length,
       };
     }

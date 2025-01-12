@@ -6,7 +6,7 @@ const QuizAttemptSchema = new mongoose.Schema(
     quizId: { type: Schema.Types.ObjectId, ref: "Quiz" },
     startTime: Date,
     endTime: Date,
-    Score: Number,
+    score: Number,
     isPassed: Boolean,
     answers: [
       {
