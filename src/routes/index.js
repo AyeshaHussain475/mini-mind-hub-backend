@@ -17,6 +17,8 @@ import instrumentRouter from "./instrument.js";
 import { createPoem } from "../controller/poems.js";
 import poemsRouter from "./poems.js";
 import DeafRouter from "./deaf.js";
+import MessgaeRouter from "./message.js";
+import RoomRouter from "./room.js";
 const router = express.Router();
 
 router.post("/signup", signup);
@@ -30,6 +32,8 @@ router.use("/animal", authenticate, animalRouter);
 router.use("/quiz", authenticate, quizRouter);
 router.use("/instrument", authenticate, instrumentRouter);
 router.use("/deaf", authenticate, DeafRouter);
+router.use("/message", MessgaeRouter);
+router.use("/room", RoomRouter);
 
 // no need to authenticate media route
 router.use("/media", mediaRouter);

@@ -28,6 +28,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
+    rooms: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Room",
+      },
+    ],
     role: {
       type: String,
       enum: ["user", "admin"],
